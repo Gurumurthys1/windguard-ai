@@ -1,0 +1,18 @@
+{
+  "id2label": {
+    "0": "craze",
+    "1": "corrosion",
+    "2": "surface_injure",
+    "3": "thunderstrike",
+    "4": "crack",
+    "5": "hide_craze"
+  },
+  "label2id": {
+    "craze": 0,
+    "corrosion": 1,
+    "surface_injure": 2,
+    "thunderstrike": 3,
+    "crack": 4,
+    "hide_craze": 5
+  }
+}

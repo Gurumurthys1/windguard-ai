@@ -1,0 +1,49 @@
+{
+  "python_version": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "pytorch_version": "2.6.0+cu124",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce MX550",
+  "seed": 42,
+  "dataset": {
+    "name": "WTBD (Wind Turbine Blade Defect Dataset)",
+    "source": "https://doi.org/10.6084/m9.figshare.30210175",
+    "n_images_total": 1065,
+    "split_strategy": "seeded random 70/15/15 split (seed=42)",
+    "split_sizes": {
+      "train": 745,
+      "val": 159,
+      "test": 161
+    }
+  },
+  "model": {
+    "architecture": "RT-DETR (Hugging Face RTDetrForObjectDetection)",
+    "pretrained_checkpoint": "PekingU/rtdetr_r50vd_coco_o365",
+    "classes": [
+      "craze",
+      "corrosion",
+      "surface_injure",
+      "thunderstrike",
+      "crack",
+      "hide_craze"
+    ]
+  },
+  "training_config": {
+    "checkpoint": "PekingU/rtdetr_r50vd_coco_o365",
+    "epochs": 25,
+    "batch_size": 2,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "lr_backbone_mult": 0.1,
+    "warmup_steps": 300,
+    "image_size": 640,
+    "seed": 42,
+    "optimizer": "AdamW",
+    "scheduler": "cosine",
+    "mixed_precision": "fp16",
+    "training_time_minutes": 0.0,
+    "final_train_loss": 0.0
+  },
+  "exact_training_command": "# training was run from this notebook (Section 8.3); to reproduce from the CLI instead, extract src/train.py from Sections 7-8 and run:\npython src/train.py --config docs/training_config.json",
+  "final_checkpoint_path": "c:\\Users\\admin\\Downloads\\ml_intern-task\\windguard-ai\\models/rtdetr-wtbd-final"
+}

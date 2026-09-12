@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments & Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Testing & Linting
+.pytest_cache/
+.coverage
+htmlcov/
+.oxlintrc.json
+
+# Node & Frontend dependencies & builds
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Temporary training runs & checkpoints (only final model weights in models/rtdetr-wtbd-final/ should be tracked)
+models/rtdetr-wtbd/
+runs/
+.ipynb_checkpoints/

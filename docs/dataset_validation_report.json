@@ -1,0 +1,18 @@
+{
+  "n_images": 1065,
+  "n_xml": 1065,
+  "matched_pairs": 1065,
+  "parse_errors": [],
+  "invalid_boxes": [],
+  "out_of_bounds_boxes": 0,
+  "duplicate_pairs": [],
+  "unknown_classes": {},
+  "class_counts": {
+    "corrosion": 257,
+    "craze": 257,
+    "thunderstrike": 92,
+    "surface_injure": 412,
+    "hide_craze": 342,
+    "crack": 224
+  }
+}

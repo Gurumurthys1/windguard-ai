@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WindGuard AI — Defect Detection & Reasoning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .logo-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .status-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.25rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(15, 23, 42, 0.4);
+            margin-bottom: 1.25rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .control-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-height: 480px;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 480px;
+            object-fit: contain;
+        }
+
+        .detections-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .detection-item {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .defect-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .response-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            min-height: 120px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .preset-btns {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .graph-img {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-group">
+            <div class="logo-icon">⚡</div>
+            <div>
+                <div class="logo-title">WindGuard AI</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">RT-DETR Defect Detection & Reasoning API</div>
+            </div>
+        </div>
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            <span>GPU Active (NVIDIA MX550)</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Training & Accuracy Metrics Summary -->
+        <section class="card full-width">
+            <div class="card-header">
+                <div class="card-title">📊 Model Metrics & Accuracy Overview</div>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Epoch 12 / 25</span>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Best Validation Loss</div>
+                    <div class="metric-value">13.1324</div>
+                    <div class="metric-label">Epoch 11 (Checkpoint-1034)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Training Loss</div>
+                    <div class="metric-value">12.8086</div>
+                    <div class="metric-label">Down from 227.89</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Architecture</div>
+                    <div class="metric-value" style="font-size: 1.3rem; margin-top: 0.6rem;">RT-DETR (ResNet-50)</div>
+                    <div class="metric-label">COCO Pretrained + WTBD Fine-tuned</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Inference Latency</div>
+                    <div class="metric-value" id="latencyDisplay">~18 ms</div>
+                    <div class="metric-label">NVIDIA GeForce MX550 FP16</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detection Panel -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">🔍 Turbine Blade Defect Detector (/detect)</div>
+            </div>
+
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📷</div>
+                <div style="font-weight: 500;">Click or Drag & Drop Blade Inspection Image</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">Supports JPG, PNG (Max 10MB)</div>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+            </div>
+
+            <div class="control-group">
+                <div style="display: flex; justify-content: space-between;">
+                    <label>Confidence Threshold</label>
+                    <span id="threshVal" style="font-weight: 600; color: var(--primary);">0.30</span>
+                </div>
+                <input type="range" id="threshInput" min="0.05" max="0.95" step="0.05" value="0.30" oninput="document.getElementById('threshVal').innerText = parseFloat(this.value).toFixed(2)">
+            </div>
+
+            <button class="btn" id="detectBtn" onclick="runDetection()" disabled>
+                <span>Run RT-DETR Detection</span>
+            </button>
+
+            <div style="margin-top: 1.5rem;">
+                <div class="image-container" id="imageContainer" style="display: none;">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="detections-list" id="detectionsList"></div>
+            </div>
+        </section>
+
+        <!-- AI Reasoning Assistant -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">🧠 AI Reasoning Assistant (/ask)</div>
+            </div>
+
+            <div class="preset-btns">
+                <div class="chip" onclick="setQuestion('What defects are detected and what repair procedure is required?')">Repair Instructions</div>
+                <div class="chip" onclick="setQuestion('Is this blade safe for continued operation?')">Safety Assessment</div>
+                <div class="chip" onclick="setQuestion('Explain the root cause of the delamination defect.')">Root Cause Analysis</div>
+            </div>
+
+            <div class="control-group">
+                <label>Ask a Question about Defect Severity or Actions</label>
+                <textarea id="questionInput" rows="3" placeholder="e.g. What is the severity of defect #1 and recommended action?"></textarea>
+            </div>
+
+            <button class="btn" id="askBtn" onclick="runReasoning()" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
+                <span>Ask WindGuard AI</span>
+            </button>
+
+            <div style="margin-top: 1.5rem;">
+                <label>Reasoning & Diagnostic Output</label>
+                <div class="response-box" id="reasoningOutput">Upload an inspection image and ask a question to view AI diagnostic reasoning...</div>
+            </div>
+        </section>
+
+        <!-- Training Loss Progression Graph -->
+        <section class="card full-width">
+            <div class="card-header">
+                <div class="card-title">📈 RT-DETR Training & Validation Loss Graph</div>
+            </div>
+            <img src="/docs/training_loss_plot.png" alt="Training Loss Curve" class="graph-img" onerror="this.style.display='none'; document.getElementById('plotFallback').style.display='block';">
+            <div id="plotFallback" style="display: none; padding: 2rem; text-align: center; color: var(--text-muted);">
+                Loss plot image available at <code>docs/training_loss_plot.png</code>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let selectedFile = null;
+        let loadedImage = null;
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            selectedFile = file;
+            document.getElementById('detectBtn').disabled = false;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const img = new Image();
+                img.onload = function() {
+                    loadedImage = img;
+                    drawCanvasImage(img, []);
+                    document.getElementById('imageContainer').style.display = 'flex';
+                };
+                img.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function drawCanvasImage(img, detections) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            ctx.drawImage(img, 0, 0);
+
+            const colors = {
+                'delamination': '#ef4444',
+                'crack': '#f59e0b',
+                'erosion': '#3b82f6',
+                'lightning_strike': '#8b5cf6',
+                'scratch': '#10b981'
+            };
+
+            detections.forEach((d, idx) => {
+                const [xmin, ymin, xmax, ymax] = d.bbox;
+                const width = xmax - xmin;
+                const height = ymax - ymin;
+                const color = colors[d.class] || '#ef4444';
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = Math.max(3, Math.round(img.width / 200));
+                ctx.strokeRect(xmin, ymin, width, height);
+
+                ctx.fillStyle = color;
+                const fontSize = Math.max(14, Math.round(img.width / 45));
+                ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+                const labelText = `#${idx + 1} ${d.class} (${(d.confidence * 100).toFixed(0)}%)`;
+                const textWidth = ctx.measureText(labelText).width;
+
+                ctx.fillRect(xmin, Math.max(0, ymin - fontSize - 6), textWidth + 10, fontSize + 6);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(labelText, xmin + 5, Math.max(fontSize, ymin - 4));
+            });
+        }
+
+        async function runDetection() {
+            if (!selectedFile) return;
+            const btn = document.getElementById('detectBtn');
+            btn.disabled = true;
+            btn.innerHTML = 'Scanning with RT-DETR...';
+
+            const thresh = document.getElementById('threshInput').value;
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            try {
+                const res = await fetch(`/detect?score_threshold=${thresh}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    document.getElementById('latencyDisplay').innerText = `${data.latency_ms} ms`;
+                    drawCanvasImage(loadedImage, data.detections);
+                    renderDetectionsList(data.detections);
+                } else {
+                    alert('Detection Error: ' + (data.detail || 'Failed'));
+                }
+            } catch (err) {
+                alert('Network Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Run RT-DETR Detection';
+            }
+        }
+
+        function renderDetectionsList(detections) {
+            const container = document.getElementById('detectionsList');
+            if (detections.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted); font-size: 0.9rem; text-align: center;">No defects detected above threshold.</div>';
+                return;
+            }
+
+            container.innerHTML = detections.map((d, i) => `
+                <div class="detection-item">
+                    <div>
+                        <strong>Defect #${i + 1}:</strong> ${d.class}
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">BBox: [${d.bbox.join(', ')}]</div>
+                    </div>
+                    <div class="defect-badge">${(d.confidence * 100).toFixed(1)}% Confidence</div>
+                </div>
+            `).join('');
+        }
+
+        function setQuestion(q) {
+            document.getElementById('questionInput').value = q;
+        }
+
+        async function runReasoning() {
+            const q = document.getElementById('questionInput').value.trim();
+            if (!q) {
+                alert('Please enter a question!');
+                return;
+            }
+
+            const btn = document.getElementById('askBtn');
+            const output = document.getElementById('reasoningOutput');
+            btn.disabled = true;
+            output.innerText = 'Analyzing with WindGuard Reasoning Layer...';
+
+            const formData = new FormData();
+            formData.append('question', q);
+            if (selectedFile) {
+                formData.append('image', selectedFile);
+            }
+
+            try {
+                const res = await fetch('/ask', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    output.innerText = data.answer || JSON.stringify(data, null, 2);
+                } else {
+                    output.innerText = 'Error: ' + (data.detail || 'Failed to generate response.');
+                }
+            } catch (err) {
+                output.innerText = 'Network error: ' + err.message;
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
