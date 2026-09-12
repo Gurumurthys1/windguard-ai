@@ -247,7 +247,7 @@ with gr.Blocks(title="WindGuard AI — RT-DETR Defect Detection & Reasoning", cs
                     
             # REASONING SECTION BELOW CARDS
             with gr.Row():
-                with gr.Column(elem_classes=["panel-card"], style={"min-height": "160px", "margin-top": "16px"}):
+                with gr.Column(elem_classes=["panel-card"]):
                     gr.HTML('<div class="panel-title"><span>💬</span> Part B: Natural Language Reasoning (No Frameworks)</div>')
                     user_q = gr.Textbox(
                         label="Ask question about this blade (Optional)",
