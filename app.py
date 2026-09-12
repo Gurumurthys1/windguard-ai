@@ -1,13 +1,23 @@
 import os
 import gradio as gr
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 import numpy as np
+import torch
+
+# Handle Hugging Face ZeroGPU environment
+try:
+    import spaces
+    gpu_decorator = spaces.GPU
+except Exception:
+    def gpu_decorator(fn):
+        return fn
 
 from src.detector import get_detector
 from src.reasoning import answer_question, classify_intent
 
-# Load fine-tuned RT-DETR model (CPU mode for Hugging Face Spaces)
-detector = get_detector(device="cpu")
+# Load detector (auto-detect CUDA if ZeroGPU is active, else CPU)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+detector = get_detector(device=device)
 
 CLASS_COLORS = {
     "crack": "#EF4444",           # Red
@@ -37,14 +47,20 @@ def draw_boxes_on_image(image: Image.Image, detections: list) -> Image.Image:
         
         # Draw label tag
         text = f"{label} {score:.0%}"
-        draw.rectangle([xmin, ymin - 16, xmin + len(text) * 8, ymin], fill=color)
-        draw.text((xmin + 2, ymin - 15), text, fill="white")
+        draw.rectangle([xmin, max(0, ymin - 18), xmin + len(text) * 8 + 6, ymin], fill=color)
+        draw.text((xmin + 4, max(0, ymin - 16)), text, fill="white")
         
     return img_copy
 
+@gpu_decorator
 def analyze_turbine(image, question, conf_threshold):
     if image is None:
         return None, "⚠️ Please upload an image of a wind turbine blade."
+    
+    # Ensure model is on proper device if ZeroGPU dynamically allocates GPU
+    if torch.cuda.is_available() and detector.device != "cuda":
+        detector.model.to("cuda")
+        detector.device = "cuda"
     
     # 1. Run RT-DETR Prediction
     detections = detector.predict(image, score_threshold=conf_threshold)
@@ -73,7 +89,7 @@ def analyze_turbine(image, question, conf_threshold):
             f"### 🔍 Detection Summary\n\n"
             f"- **Total Defects Found:** `{len(detections)}`\n"
             f"- **Defect Breakdown:** {counts_str}\n\n"
-            f"💡 *Ask a question above to test the structured reasoning engine!*"
+            f"💡 *Ask a natural-language question above to test the reasoning engine!*"
         )
         
     return annotated_img, summary
