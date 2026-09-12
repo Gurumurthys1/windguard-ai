@@ -317,8 +317,8 @@ with gr.Blocks(title="WindGuard AI", theme=gr.themes.Base()) as demo:
 
     with gr.Tabs(elem_classes=["tab-nav"]):
 
-        # ── TAB 1 ────────────────────────────────────────────────────────────
-        with gr.TabItem("🔍 Defect Detection & Inspection"):
+        # ── TAB 1 — Dashboard (shown first on load) ──────────────────────────
+        with gr.TabItem("📊 Performance Dashboard"):
             with gr.Row(equal_height=True):
 
                 # Left — Upload Panel
@@ -384,8 +384,8 @@ with gr.Blocks(title="WindGuard AI", theme=gr.themes.Base()) as demo:
                 outputs=[output_img, output_md],
             )
 
-        # ── TAB 2 ────────────────────────────────────────────────────────────
-        with gr.TabItem("📊 Performance Metrics"):
+        # ── TAB 2 — Defect Detection & Inspection ────────────────────────────
+        with gr.TabItem("🔍 Defect Detection & Inspection"):
             gr.HTML("""
             <div class="wg-metrics">
               <div class="wg-metric">
