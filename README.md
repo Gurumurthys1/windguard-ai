@@ -7,6 +7,26 @@
 
 ---
 
+## 🌐 Live Demo
+
+[![Live Demo on Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Demo-blue?style=for-the-badge)](https://huggingface.co/spaces/Gurus01/windguard-ai)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Gurumurthys1%2Fwindguard--ai-black?style=for-the-badge&logo=github)](https://github.com/Gurumurthys1/windguard-ai)
+
+> 🚀 **Try it now — no installation required:**  
+> **[https://huggingface.co/spaces/Gurus01/windguard-ai](https://huggingface.co/spaces/Gurus01/windguard-ai)**  
+> Upload a wind turbine blade image → Get RT-DETR defect bounding boxes + natural language AI reasoning instantly.
+
+| | |
+|---|---|
+| **Live App** | [https://huggingface.co/spaces/Gurus01/windguard-ai](https://huggingface.co/spaces/Gurus01/windguard-ai) |
+| **GitHub Repo** | [https://github.com/Gurumurthys1/windguard-ai](https://github.com/Gurumurthys1/windguard-ai) |
+| **Hardware** | ZeroGPU (Free Tier) |
+| **Model** | RT-DETR ResNet-50 Fine-Tuned |
+| **mAP@50** | **84.20%** |
+| **Inference Latency** | ~42 ms |
+
+---
+
 ## 🚀 Quick Start & Web Application UI
 
 ### Option 1: Run via Docker (Recommended)
