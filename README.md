@@ -27,6 +27,15 @@
 
 ---
 
+## 📥 Downloads
+
+| Document | Format | Download |
+|---|---|---|
+| Technical Memo (Written Report) | Word (.docx) | [**⬇ Download written_memo.docx**](https://github.com/Gurumurthys1/windguard-ai/raw/main/docs/written_memo.docx) |
+| Technical Memo (Markdown source) | Markdown (.md) | [**📄 View written_memo.md**](https://github.com/Gurumurthys1/windguard-ai/blob/main/docs/written_memo.md) |
+
+---
+
 ## 🚀 Quick Start & Web Application UI
 
 ### Option 1: Run via Docker (Recommended)
